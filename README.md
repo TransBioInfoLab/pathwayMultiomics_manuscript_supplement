@@ -33,7 +33,8 @@ The `analysis_SNP/` folder contains:
 - `example_input_data/`: a folder with 10 Excel files. These files are annotated SNP activity within a single pathway. The full set of data files is 2,833 such tables (one for each pathway in the C2 CP collection). We do not include all these files due to repository size restrictions. The full set of 2833 Excel tables would be fed into SAS via the analysis scripts in `src/sas/`.
 - `"single_gene_SNP_min_pValue_spline_20210823.csv"`: single gene results used for `mitch::` input
 - `src/`: script files. There are 6 SAS scripts to perform the SNP analysis (in `sas/`) and 2 R scripts to wrangle the SAS output:
-    + `"p-values-estimation_use-empirical-null.R"`: script used to apply the Bacon significance correction
+    + `"MOD_7-10-2021-clean.sas": script for pathway analysis of genetic variants
+    + `"p-values-estimation_use-empirical-null-clean.R"`: script used to apply the Bacon significance correction
     + `"wrangle_SAS_output_20210720.R"`: script to clean up the results
 - `"all_results_bacon_correction_7-21-2021.csv"`: the SNP pathway analysis results after correcting the *p*-values
 - `"all_bacon_results_wrangled_20210809.csv"`: SNP pathway analysis results from the SAS macro
