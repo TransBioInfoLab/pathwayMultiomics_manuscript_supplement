@@ -1,0 +1,6 @@
+The results files for the iProFun and ade4 MFA methods are all multiple gigabytes
+in size. Those files will be hosted via DropBox or a similar service.
+The mitch and MiniMax results files are about 1GB in total, and we will add those
+separately.
+
+Gabriel Odom, 2021-09-29

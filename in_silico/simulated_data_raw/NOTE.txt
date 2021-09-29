@@ -1,0 +1,4 @@
+This folder is currently empty by design. The simulated data is about 870Mb and
+will be made available at our earliest convenience.
+
+Gabriel Odom, 2021-09-29
