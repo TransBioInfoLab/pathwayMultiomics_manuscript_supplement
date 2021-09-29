@@ -7,11 +7,11 @@
 # https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-06856-9
 # https://github.com/markziemann/mitch
 #
-# This package has reasonable power, but no way to control the test size. Thus,
-#   Lily suggests that we use the AUC to compare this method. I've gone back and
+# This package has great power, but no way to control the test size. Thus, Lily
+#   suggests that we use the AUC to compare this method. I've gone back and
 #   added AUC calculations for the MiniMax (in GA_simlation_pt7_20201202.R and
-#   MiniMax_wrangle_power_20200821.R). The MiniMax does well with this new
-#   metric as well.
+#   MiniMax_wrangle_power_20200821.R). The MiniMax performs strongly with this 
+#   new metric as well.
 # Now that we have a comparable method and an appropriate metric, this script
 #   will attempt to analyse all the simulated data with the mitch:: package.
 

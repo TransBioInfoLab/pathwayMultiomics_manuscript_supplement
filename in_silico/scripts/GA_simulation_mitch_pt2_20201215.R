@@ -252,6 +252,10 @@ saveRDS(
 
 rm(list = ls())
 
+# So finally, we have a really awesome method to compare against. mitch:: is
+#   lightning fast (much faster than pathwayPCA + MiniMax) and had *great* AUC.
+#   I'll be using both MiniMax and mitch in the future.
+
 
 
 ######  Plot AUC  ###########################################################

@@ -15,7 +15,7 @@
 
 # UPDATE 20201222: the power is still bad, so we are going to run sCCA for only
 #   the most extreme simulation design scenario (80% treated features, +50%
-#   signal).
+#   signal). But this method is 10+ years old, so I'll give it a pass.
 
 # install.packages("PMA")
 library(tidyverse)
@@ -415,5 +415,5 @@ mean(as.numeric(res_df$time))
 
 write_csv(
   x = res_df,
-  file = "simAnalysis/small_sim_sCCA_20201222/summary_20210502.csv"
+  file = "simAnalysis/small_sim_sCCA_20201222/sCCA_summary_20210502.csv"
 )
