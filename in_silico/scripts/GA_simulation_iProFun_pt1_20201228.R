@@ -5,17 +5,9 @@
 # Lily reminded me of Pei's package for integrative multi-omics. I'm going to
 #   test it now. They do not have a vignette, but they do have a README:
 # https://github.com/songxiaoyu/iProFun
-# UPDATE 20201201: we've dropped HiSeq RNAseq and included GA RNAseq; we tested
-#   this technique in test_iProFun_20201222.R.
 
-# UPDATE 20201222: the power is bad, so we are going to run sCCA for only the
-#   most extreme simulation design scenario (80% treated features, +50% signal).
-
-# UPDATE 20201228: the power isn't as bad as we thought for the strongest signal
-#   design point (but it's still not great; Median = 0.7733; Q3 = 0.8517; Max =
-#   0.9667). Lily is worried that a reviewer will not agree that AUC for this
-#   method is monotonic with signal strength, so we are now adding this
-#   technique to the full sim study.
+# UPDATE 20201228: the power isn't bad for the strongest signal design point
+#   (Median = 0.7733; Q3 = 0.8517; Max = 0.9667). 
 
 # install.packages("metRology")
 # devtools::install_github("songxiaoyu/iProFun")
@@ -49,41 +41,6 @@ simAnalysisFolders <- paste0(
 
 
 
-######  Copy Previous Results  ################################################
-# # For the "small" simulation (just the {80%, +50%} design point), we already
-# #   have all 100 sim replicates complete. Let's copy those over from the old
-# #   directory into the new 100 sub-directories. I'm going to first move the
-# #   single results summary file to the new directory, then copy the results 
-# #   files themselves into the appropriate sub-directories
-# file.copy(
-#   from = "./simAnalysis/small_sim_iProFun_20201222/summary_20201224.csv",
-#   # Just like in the shell, a copy command can rename the file
-#   to = "simAnalysis/iProFun_sim_20201228/small_summary_20201224.csv"
-# )
-# filesInOldDir_char <-
-#   list.files("./simAnalysis/small_sim_iProFun_20201222/", pattern = ".RDS")
-# newFilePaths_char <- 
-#   filesInOldDir_char %>% 
-#   str_remove(pattern = "_run\\d{3}") %>% 
-#   str_replace(pattern = "results", replacement = "composite") %>% 
-#   paste0(simAnalysisFolders, "/", .)
-# 
-# map2(
-#   .x = filesInOldDir_char,
-#   .y = newFilePaths_char,
-#   .f = ~{
-#     file.copy(
-#       from = paste0("./simAnalysis/small_sim_iProFun_20201222/", .x),
-#       to = .y,
-#       copy.date = TRUE
-#     )
-#   }
-# )
-# 
-# rm(filesInOldDir_char, newFilePaths_char)
-
-
-
 ######  Simulation Design  ####################################################
 ###  Import Data  ###
 # Treated values
@@ -99,10 +56,6 @@ simDesign_ls <- readRDS(
 # Predictor Data Sets
 dataFiles_char <-
   dataFiles_char[!str_detect(dataFiles_char, "indicatorMatrices")]
-# UPDATE 2020-12-28: we have already completed the simulation runs for the 
-#   {80%, +50%} design, so let's remove those three data files
-dataFiles_char <-
-  dataFiles_char[!str_detect(dataFiles_char, "partition4_delta0.5")]
 
 
 # Design points
@@ -278,10 +231,6 @@ RunIProFun <- function(simRunLabel, PC) {
   
   dataFiles_char <-
     dataFiles_char[!str_detect(dataFiles_char, "indicatorMatrices")]
-  # UPDATE 2020-12-28: we have already completed the simulation runs for the 
-  #   {80%, +50%} design, so let's remove those three data files
-  dataFiles_char <-
-    dataFiles_char[!str_detect(dataFiles_char, "partition4_delta0.5")]
   
   # Design points
   designs_char <- unique(

@@ -2,10 +2,7 @@
 # Gabriel Odom
 # 2021-01-13
 
-# See the original script in "test_ade4_20201223.R"
-
 # install.packages("ade4")
-# BiocManager::install("made4")
 library(tidyverse)
 library(pathwayPCA)
 library(ade4)
@@ -52,10 +49,14 @@ testOverrep = function(features, universe, pathway){
   c = intersect(setdiff(universe, pathway), features)
   d = intersect(setdiff(universe, pathway), setdiff(universe, features))
   
-  ct =  matrix(c(length(a), length(b), length(c), length(d)),
-               nrow = 2, byrow = FALSE,
-               dimnames = list("Pathway" = c("Yes", "No"), 
-                               "Method" = c("Yes", "No")))
+  ct = matrix(
+    c(length(a), length(b), length(c), length(d)),
+    nrow = 2, byrow = FALSE,
+    dimnames = list(
+      "Pathway" = c("Yes", "No"), 
+      "Method" = c("Yes", "No")
+    )
+  )
   fp = fisher.test(ct, alternative = "greater")$p.value
   
   return(fp)

@@ -123,7 +123,6 @@ simResults_ls <- readRDS(
 
 
 ###  AUC  ###
-# UPDATE 2021-05-02: I didn't extract the test size from these results last time.
 library(pROC)
 iProFunAUC <- function(run_df){
   
