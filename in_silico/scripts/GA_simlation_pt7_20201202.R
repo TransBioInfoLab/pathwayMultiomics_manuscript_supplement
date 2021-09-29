@@ -217,24 +217,6 @@ simMiniMax_ls <-
     # estimate = TRUE
   )
 
-# Apply (Predicted MLEs)
-# NOTE: this assumes that we can estimate the MLEs from the correlation alone.
-#   for now, let's hold off on this and use the proper MLEs calculated under H0
-#   in 
-# simMiniMax_ls <- 
-#   map(
-#     .x = simResults_ls,
-#     .f = ~{
-#       
-#       detCorr <- det(cor(.x[, c("rawp_CNV", "rawp_RNAseq", "rawp_Prot")]))
-#       # See Slack messages from 15 October for this justification
-#       aveBetaParams <- (-7 / 8) * sqrt(1 - detCorr) + 2
-#       
-#       MiniMaxTest(df = .x, alpha = aveBetaParams, beta = aveBetaParams)
-#       
-#     }
-#   )
-
 
 
 ######  Calculate MiniMax Sensitivity and Specificity  ####################

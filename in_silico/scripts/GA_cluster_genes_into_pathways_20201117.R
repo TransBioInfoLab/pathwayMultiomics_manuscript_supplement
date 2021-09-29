@@ -11,14 +11,6 @@ library(pathwayPCA)
 # Grab data from the TCGA COADREAD page on:
 # http://www.linkedomics.org/data_download/TCGA-COADREAD/
 
-# RNAseq (HiSeq)
-coadRNAseq_df <- read_delim(
-  "data/Human__TCGA_COADREAD__UNC__RNAseq__HiSeq_RNA__01_28_2016__BI__Gene__Firehose_RSEM_log2.cct.gz", 
-  "\t", escape_double = FALSE, trim_ws = TRUE
-)
-coadRNAseq_df <- TransposeAssay(coadRNAseq_df)
-# 379 samples, 19828 features
-
 
 # RNAseq (GenomaAnalyzer)
 coadRNAseqGA_df <- read_delim(
@@ -91,9 +83,6 @@ rm(matchGene_ls)
 # We want to find out how far apart the genes are, so we must transpose our
 #   data:
 coadMatchedGenesT_mat <- t(coadMatchedGenes_df)
-
-# CONCLUSION BASED ON PREVIOUS SIMULATION: let's use Euclidean + Ward as it will
-#   be easy to explain, and is similar in behaviour to Minkowski + Ward.
 
 system.time(
   allGenesEuc_dist <- dist(coadMatchedGenesT_mat, method = "euclidean")

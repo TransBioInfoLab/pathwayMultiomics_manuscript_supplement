@@ -175,7 +175,7 @@ t1 <- Sys.time()
 
 saveRDS(
   results_ls,
-  file = "simResultsRaw/pathwayPCA_sim_20201201/globalTest_test_size_20201201.RDS"
+  file = "simResultsRaw/pathwayPCA_sim_20201201/miniMax_test_size_20201201.RDS"
 )
 
 

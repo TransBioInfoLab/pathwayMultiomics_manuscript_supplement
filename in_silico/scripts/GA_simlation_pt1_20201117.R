@@ -9,21 +9,18 @@
 #   is have only 5 samples in common). We will keep the results of this first
 #   simulation, but Steven suggested that we also us the legacy format gene
 #   expression data and repeat the simulation. Apparently, the "GenomeAnalyzer"
-#   platform hs more overlap than the HiSeq platform (but it's a much older
+#   platform has more overlap than the HiSeq platform (but it's a much older
 #   technique, so the data has lower quality). Here's our updated plan:
 #   1. Replace HiSeq RNAseq data with GA RNAseq data; this platform should have
 #      nearly full overlap with the samples from the other platforms.
-#   2. Repeat the MiniMax simulation study (technically, we should only have to
-#      add a result for GA RNAseq because the MiniMax technique analyses the
-#      platforms independently).
+#   2. Repeat the MiniMax simulation study.
 #   3. Once we have MiniMax results for a set of data with matched samples,
 #      compare the MiniMax technique to some other methods (sCCA, NNMF, iProFun,
 #      MoGSA, ade4, MSFA, etc.--I'll have to try these out). Obviously, for the
 #      first simulation study (using Hi Seq RNAseq), the MiniMax statistic
 #      offers vastly superior statistical power, because there are only 5 
 #      samples available to the other methods. For the GenomeAnalyzer RNAseq,
-#      there are closer to 220 matched samples, so we hope that the MiniMax will
-#      not be too inferior.
+#      there are closer to 220 matched samples.
 
 
 
@@ -37,9 +34,6 @@
 #      correlation structures will be the same for all data. Our technique
 #      doesn't necessarily pick out second-moment differences.
 #   3. Standardise all features to have mean 0 and standard deviation 1.
-#   4. Ensure we have complete survival information for each subject (if we 
-#      potentially would like to analyse survival response in addition to binary
-#      classification).
 
 # Given this pathway collection and these three data sets, we will simulate a
 #   "subtype" of this cancer by treating half of the samples at random (ensuring
@@ -58,16 +52,10 @@
 #      We will default to 20.
 #      UPDATE 20201201: we have 50 pathways (because of the smaller set of
 #      shared genes), and we will treat 5 of them.
-#   2. How many of the pathways disregulated for the cancer will also be 
-#      disregluated for each subject? (Not all pathways will be disregulated for
-#      all subjects in real cancer.) At the start, this will default to 20, to
-#      match the number of disregulated pathways; i.e., all pathways will be
-#      disregulated for all subjects.
-#      UPDATE 20201201: we've decided to hold off on this modification 
-#   3. What proportion of genes in each disregulated pathway will be treated? We
+#   2. What proportion of genes in each disregulated pathway will be treated? We
 #      will have this range over 20%, 40%, ..., 80%. 
-#   4. What will the treatment effect be? Our first simulation with HiSeq RNAseq
-#      had delta = +0.1x, +0.2x, ..., +0.5x of the standard deviation.
+#   3. What will the treatment effect be? We use delta = +0.1x, +0.2x, ..., +0.5x
+#      of the standard deviation.
 
 
 library(tidyverse)
@@ -78,13 +66,6 @@ library(pathwayPCA)
 ######  Colon Cancer Cases  ###################################################
 # Grab data from the TCGA COADREAD page on:
 # http://www.linkedomics.org/data_download/TCGA-COADREAD/
-
-# RNAseq (HiSeq)
-coadRNAseq_df <- read_delim(
-  "data/Human__TCGA_COADREAD__UNC__RNAseq__HiSeq_RNA__01_28_2016__BI__Gene__Firehose_RSEM_log2.cct.gz", 
-  "\t", escape_double = FALSE, trim_ws = TRUE
-)
-coadRNAseq_df <- TransposeAssay(coadRNAseq_df)
 
 
 # RNAseq (GenomeAnalyzer)
@@ -123,9 +104,6 @@ coadClinical_df <-
 
 
 ###  Check Sample Overlaps  ###
-# HiSeq RNAseq: 377; 367 after removing missing responses
-length(intersect(coadRNAseq_df$Sample, coadClinical_df$Sample))
-setdiff(coadRNAseq_df$Sample, coadClinical_df$Sample)
 
 # GA RNAseq: 222; 205 after removing missing responses
 length(intersect(coadRNAseqGA_df$Sample, coadClinical_df$Sample))
@@ -143,7 +121,7 @@ setdiff(coadProt_df$Sample, coadClinical_df$Sample)
 #   times for the missing samples (this would be the best of both worlds). We
 #   then state that the X genes chosen to be treated would be TSGs for our 
 #   simulated cancer subtype, resulting in increased survival time (then we 
-#   multiply survival time by 1.5 or 2 or something).
+#   could multiply survival time by 1.5 or 2 or something).
 
 
 ###  Check Gene Overlaps  ###
@@ -170,20 +148,11 @@ length(
 
 length(
   intersect(
-    colnames(coadRNAseq_df[, -1]),
-    colnames(coadRNAseqGA_df[, -1])
-  )
-)
-# 5500 / 6149 genes shared between GA and HiSeq (large concordance, ~89%)
-
-length(
-  intersect(
     colnames(coadProt_df[, -1]),
     colnames(coadRNAseqGA_df[, -1])
   )
 )
 # GA: 1715 / 5538 ~= 31% concordance
-# HiSeq: 5275 / 5538 ~ 95% concordance
 
 length(
   intersect(
@@ -192,7 +161,7 @@ length(
   )
 )
 # 5212 / 6149 ~= 85%
-# rm(coadClinical_df, coadCNV_df, coadProt_df, coadRNAseq_df)
+# rm(coadClinical_df, coadCNV_df, coadProt_df, coadRNAseqGA_df)
 
 
 
@@ -289,25 +258,3 @@ setdiff(coadRNAseqGA_df$Sample, unique(simDesignTest_df$Sample))
 setdiff(unique(simDesignTest_df$Sample), coadRNAseqGA_df$Sample)
 # 409 subjects are not included
 
-# Based on this information, we should be able to keep the same simulated
-#   responses (because all the samples from GA RNAseq are already included, we
-#   don't have to simulate all new data sets for CNV and proteomics). Therefore,
-#   we can also keep the AES-PCA results for the CNV and proteomics data sets
-#   for the MiniMax approach. Question:
-#   1. should we use matched-sample techniques AND feature-matched (stacked)
-#      pathwayPCA for comparison, or
-#   2. should we just use matched-sample techniques for comparison?
-#   This could realistically be two different simulation studies, 1) using 222
-#   shared samples (which lets us compare to MOGSA, iProFun, etc), and 2) using
-#   5 shared samples but only comparing against stacked pathwayPCA. If we keep
-#   them completely separate (rather than attempting to "nest" the studies),
-#   then we don't have to match the features.
-# NOTE: now that I'm thinking about it, the genes between the GA RNAseq and 
-#   HiSeq RNAseq aren't the same and they don't share the same intersection.
-#   Recall that when we used the HiSeq RNAseq, we had 5252 genes shared across
-#   the three platforms. Now, using GA, we only have 1710. This means that if
-#   we want to be able to use the same results for CNV and proteomics, we would
-#   have to simulate the missing genes for GA. This could be a problem.
-
-# We will have to simulate fresh data. Also, we only need to save the 1710 genes
-#   in the intersection of the three platforms (this will save on space).

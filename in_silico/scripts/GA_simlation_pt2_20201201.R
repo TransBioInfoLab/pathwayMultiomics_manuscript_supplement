@@ -37,16 +37,10 @@
 # Concerning the design points, we would like control over the following:
 #   1. How many pathways of the 50 will be disregulated for the cancer subtype?
 #      We will default to 5.
-#   2. How many of the pathways disregulated for the cancer will also be 
-#      disregluated for each subject? (Not all pathways will be disregulated for
-#      all subjects in real cancer.) At the start, this will default to 5, to
-#      match the number of disregulated pathways; i.e., all pathways will be
-#      disregulated for all subjects.
-#      UPDATE 20201201: we've decided to hold off on this modification 
-#   3. What proportion of genes in each disregulated pathway will be treated? We
+#   2. What proportion of genes in each disregulated pathway will be treated? We
 #      will have this range over 20%, 40%, ..., 80%. 
-#   4. What will the treatment effect be? Our first simulation with HiSeq RNAseq
-#      had delta = +0.1x, +0.2x, ..., +0.5x of the standard deviation.
+#   3. What will the treatment effect be? Use delta = +0.1x, +0.2x, ..., +0.5x
+#      of the standard deviation.
 
 
 library(tidyverse)

@@ -79,76 +79,42 @@ resp_df <- tibble(
 
 
 
-######  Inspect Treated Data  #################################################
-# Can we see a treatment effect? If we can't see one, then perhaps this is why
-#   the methods we have tried so far can't see one either.
-
-# testPath_ls <- cluster_PC[[simDesign_ls$treatedPathways[1]]]
-# 
-# test_df <- dataDF_ls$Prot[, c("Sample", testPath_ls$IDs)]
-# treatAve_num <- 
-#   test_df %>%
-#   filter(
-#     Sample %in% pull(filter(resp_df, Treated), Sample)
-#   ) %>%
-#   select(-Sample) %>%
-#   colMeans
-# unTreatAve_num <- 
-#   test_df %>%
-#   filter(
-#     Sample %in% pull(filter(resp_df, !Treated), Sample)
-#   ) %>%
-#   select(-Sample) %>%
-#   colMeans
-# 
-# hist(treatAve_num - unTreatAve_num, breaks = 10)
-# rm(testPath_ls, test_df, treatAve_num, unTreatAve_num)
-
-# Recall that 80% of the genes in the selected pathway receive treatment, so it
-#   makes sense that this is bimodal. There is a clear treatment effect, as
-#   80% of these differences are > 0. the question becomes: can pathwayPCA + the
-#   MiniMax statistic detect this difference? So far, sCCA, iProFun, and ADE4
-#   have not been able to detect this difference.
-
-
-
-
 ######  Analysis Internals  ###################################################
-
-###  1. Read Data and Create Omics*  ###
-# List all the data files for this run, and remove the design information that
-#   is stored in "indicatorMatricesXXX_ls.RDS".
-omics_ls <- map(
-  .x = dataDF_ls,
-  .f = CreateOmics,
-  pathwayCollection_ls = cluster_PC,
-  response = resp_df,
-  respType = "categ"
-)
-
-map(omics_ls, print)
-
-###  2. AES-PCA and p-Values  ###
-start_POSIX <- Sys.time()
-res_aespcOut <- AESPCA_pVals(
-  omics_ls[[1]],
-  parallel = TRUE, numCores = 5L,
-  adjustpValues = TRUE,
-  adjustment = "BH"
-)
-end_POSIX <- Sys.time()
-res_aespcOut$compTime <- end_POSIX - start_POSIX
-# 1.557 min for 2 cores; 1.117 min for 4; 1.056 for 6; 1.120 for 8; 0.970 for 5
-
-
-res_aespcOut$pVals_df <-
-  res_aespcOut$pVals_df %>% 
-  mutate(treated = terms %in% simDesign_ls$treatedPathways) %>% 
-  select(terms, rawp, FDR_BH, treated) 
-
-saveRDS(
-  res_aespcOut, paste0(simAnalysisFolders[78], "/", allSimDataFiles_char[60])
-)
+# 
+# ###  1. Read Data and Create Omics*  ###
+# # List all the data files for this run, and remove the design information that
+# #   is stored in "indicatorMatricesXXX_ls.RDS".
+# omics_ls <- map(
+#   .x = dataDF_ls,
+#   .f = CreateOmics,
+#   pathwayCollection_ls = cluster_PC,
+#   response = resp_df,
+#   respType = "categ"
+# )
+# 
+# map(omics_ls, print)
+# 
+# ###  2. AES-PCA and p-Values  ###
+# start_POSIX <- Sys.time()
+# res_aespcOut <- AESPCA_pVals(
+#   omics_ls[[1]],
+#   parallel = TRUE, numCores = 5L,
+#   adjustpValues = TRUE,
+#   adjustment = "BH"
+# )
+# end_POSIX <- Sys.time()
+# res_aespcOut$compTime <- end_POSIX - start_POSIX
+# # 1.557 min for 2 cores; 1.117 min for 4; 1.056 for 6; 1.120 for 8; 0.970 for 5
+# 
+# 
+# res_aespcOut$pVals_df <-
+#   res_aespcOut$pVals_df %>% 
+#   mutate(treated = terms %in% simDesign_ls$treatedPathways) %>% 
+#   select(terms, rawp, FDR_BH, treated) 
+# 
+# saveRDS(
+#   res_aespcOut, paste0(simAnalysisFolders[78], "/", allSimDataFiles_char[60])
+# )
 
 
 
