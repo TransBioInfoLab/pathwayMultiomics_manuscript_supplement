@@ -44,3 +44,7 @@ The `analysis_SNP/` folder contains:
 The `multiomics/` folder contains the scripts and results for the MiniMax statistic (`MiniMax/`) and for the `mitch::` package (`mitch/`).
 
 
+## Simulation Test Size Results
+The file "data/pathwayMultiomics_test_size_20211201.RDS" is a collection of the pathway p-values for each data platform (using the pathwayPCA method) and the resulting MiniMax statistic under the null hypothesis (no treatment added to the data). The test size of the MiniMax statistic will depend on the parameters of the Beta distribution selected for this data, but the paper uses the asymptotic values of (alpha = 2, beta = 2). Therefore, MiniMax p-values can be calculated by finding the quantile of the Beta(2,2) distribution for the MiniMax statistic values.
+
+
